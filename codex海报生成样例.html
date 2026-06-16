@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex 海报生成样例：从小说文本到薰儿人设海报</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #64748b;
+      --line: #d9e2ec;
+      --paper: #fbfcff;
+      --panel: #ffffff;
+      --soft: #f3f7fb;
+      --violet: #7663c6;
+      --gold: #b98020;
+      --green: #4f8f7d;
+      --shadow: 0 18px 45px rgba(31, 41, 51, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fa 42%, #f8fbff 100%);
+      line-height: 1.65;
+    }
+
+    a {
+      color: #4f46a5;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      min-height: 74vh;
+      display: grid;
+      align-items: end;
+      padding: 56px 24px 48px;
+      background:
+        linear-gradient(180deg, rgba(14, 18, 34, 0.18), rgba(14, 18, 34, 0.58)),
+        url("薰儿-txt/薰儿-poster-9x16-4k.png") center 24% / cover no-repeat;
+      color: white;
+    }
+
+    .hero-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 840px;
+      font-size: clamp(38px, 7vw, 82px);
+      line-height: 1.04;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 18px 0 0;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    main {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    section {
+      margin-top: 40px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 19px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 8px 28px rgba(31, 41, 51, 0.06);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat strong {
+      font-size: 30px;
+      line-height: 1.1;
+      color: var(--violet);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--violet), var(--gold));
+    }
+
+    .bubble {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--panel);
+    }
+
+    .bubble.user {
+      border-left: 4px solid var(--violet);
+    }
+
+    .bubble.codex {
+      border-left: 4px solid var(--green);
+    }
+
+    .speaker {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .poster-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    figure {
+      margin: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #101827;
+    }
+
+    figcaption {
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #172033;
+      color: #edf2ff;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+
+    .taglist {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: #42526e;
+      font-size: 14px;
+    }
+
+    .artifact-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .artifact-list li {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .grid.two,
+      .grid.three,
+      .poster-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 62vh;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Codex poster generation sample</p>
+      <h1>从《斗破苍穹》全文到「薰儿」人设海报</h1>
+      <p>这个页面记录了一次完整的 Codex 协作过程：先把 EPUB 转成文本并按章节拆分，再检索角色相关段落，整理人设，生成 prompt，最后产出成熟期与青涩期两张 9:16 4K 海报。</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>案例概览</h2>
+      <div class="grid three">
+        <div class="card stat">
+          <strong>1676</strong>
+          <span>按 EPUB 目录拆出的章节/条目</span>
+        </div>
+        <div class="card stat">
+          <strong>2191</strong>
+          <span>「薰儿 / 萧薰儿 / 古薰儿」命中上下文</span>
+        </div>
+        <div class="card stat">
+          <strong>2</strong>
+          <span>最终生成的人设海报版本</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>原始需求</h2>
+      <div class="grid">
+        <div class="bubble user">
+          <span class="speaker">用户</span>
+          <p>把《斗破苍穹 - 天蚕土豆 - 1676CHS.epub》转化为 txt。</p>
+        </div>
+        <div class="bubble user">
+          <span class="speaker">用户</span>
+          <p>把小说按照章节拆分，每个章节一个 txt，放在 <code>sections/&lt;章节&gt;-&lt;标题&gt;.txt</code>。</p>
+        </div>
+        <div class="bubble user">
+          <span class="speaker">用户</span>
+          <p>搜索全文里「薰儿」「萧薰儿」「古薰儿」出现的段落，包括上一段和下一段，统一整理到 <code>薰儿-txt/</code>；根据相关文本生成人设 prompt，并画一张 9:16 的 4K 海报。</p>
+        </div>
+        <div class="bubble user">
+          <span class="speaker">用户</span>
+          <p>再给青涩时期的「萧薰儿」生成一版海报。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>处理流程</h2>
+      <div class="timeline">
+        <article class="step">
+          <div class="num">1</div>
+          <div>
+            <h3>EPUB 转 TXT</h3>
+            <p>解析 <code>META-INF/container.xml</code> 找到 OPF，按 <code>&lt;spine&gt;</code> 顺序读取章节 HTML，抽取标题和正文段落，清理每章的来源链接，输出 UTF-8 文本。</p>
+            <p class="muted">结果：<code>斗破苍穹 - 天蚕土豆 - 1676CHS.txt</code>，80697 行。</p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="num">2</div>
+          <div>
+            <h3>按章节拆分</h3>
+            <p>仍然以 EPUB spine 为准拆分，避免误把正文里的章节名当边界。文件名采用 <code>章节-标题.txt</code>，源 EPUB 中少量作者公告用顺序号兜底。</p>
+            <p class="muted">结果：<code>sections/</code> 下 1676 个 txt。</p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="num">3</div>
+          <div>
+            <h3>检索薰儿上下文</h3>
+            <p>在所有章节 txt 中检索 <code>薰儿</code>、<code>萧薰儿</code>、<code>古薰儿</code>，每次命中都保留上一段、命中段、下一段，分别输出为总表、JSONL、索引和按章节归档。</p>
+            <p class="muted">结果：2191 条上下文，涉及 324 个章节/条目。</p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="num">4</div>
+          <div>
+            <h3>整理人设</h3>
+            <p>从命中文本中提炼可视化信息：清雅淡然、如青莲、紫/淡绿衣裙、秋水眸、长青丝、古族神品血脉、七彩族纹、金帝焚天炎等。</p>
+            <div class="taglist">
+              <span class="tag">清雅</span>
+              <span class="tag">青莲感</span>
+              <span class="tag">秋水眸</span>
+              <span class="tag">古族</span>
+              <span class="tag">神品血脉</span>
+              <span class="tag">七彩族纹</span>
+              <span class="tag">金帝焚天炎</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="num">5</div>
+          <div>
+            <h3>生成成熟期海报</h3>
+            <p>成熟期 prompt 聚焦「古族神品血脉 + 金帝焚天炎」：成年版、非性感化、月白/浅青/淡紫衣裙、额间七彩族纹、金色莲形火焰光环、古族祭坛。</p>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="num">6</div>
+          <div>
+            <h3>生成青涩期海报</h3>
+            <p>青涩期 prompt 聚焦早期萧家测验场：十五六岁、年龄合适、紫裙黑金袖口、萧家测验石、淡金斗气初显，弱化成熟期的强压迫火焰。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>关键产物</h2>
+      <ul class="artifact-list">
+        <li><code>薰儿-txt/all-contexts.txt</code>：全部命中上下文，含上一段、命中段、下一段。这个文件包含大量小说原文，仅保留在本地，不纳入公开仓库。</li>
+        <li><code>薰儿-txt/by-chapter/</code>：按章节拆分的薰儿相关上下文。这个目录同样仅保留在本地，不纳入公开仓库。</li>
+        <li><a href="薰儿-txt/summary.json">薰儿-txt/summary.json</a>：检索统计摘要，不包含正文原文。</li>
+        <li><a href="薰儿-txt/top-chapters.txt">薰儿-txt/top-chapters.txt</a>：命中最多章节列表，不包含正文原文。</li>
+        <li><a href="薰儿-txt/character-brief.md">薰儿-txt/character-brief.md</a>：从文本整理的人设摘要。</li>
+        <li><a href="薰儿-txt/poster-prompt.txt">薰儿-txt/poster-prompt.txt</a>：成熟期人设海报 prompt。</li>
+        <li><a href="薰儿-txt/poster-prompt-young-xiao-xuner.txt">薰儿-txt/poster-prompt-young-xiao-xuner.txt</a>：青涩期萧薰儿海报 prompt。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>成熟期 Prompt 摘要</h2>
+      <pre><code>Adult Chinese fantasy heroine in her early twenties, serene, elegant, noble, quietly powerful.
+Long flowing black hair tied with pale purple ribbon; autumn-water eyes with subtle golden flame light.
+Small luminous rainbow clan mark on forehead.
+Pale lavender, moon white, soft celadon green hanfu-inspired dress with restrained black-and-gold trim.
+Golden imperial flame with liquid-sunfire texture coils around fingers and forms a lotus-shaped halo.
+Ancient clan altar at night, celestial sky, floating golden embers.
+No text, one character, adult appearance, non-sexualized, no male lead.</code></pre>
+    </section>
+
+    <section>
+      <h2>青涩期 Prompt 摘要</h2>
+      <pre><code>Youthful early-period Xiao Xun'er, teenage Chinese xuanhuan heroine, around 15-16.
+Fresh, graceful, quiet, intelligent, lotus-like, gentle prodigy with hidden ancient-clan power.
+Soft purple modest hanfu-inspired clan attire with black-and-gold sleeve trim, celadon accents.
+Subtle early-stage golden douqi, faint glow in eyes and fingertips.
+Early Xiao clan courtyard / testing ground at dusk, dark testing stone stele, old stone paving.
+No text, one character, teenage appearance, modest and non-sexualized.</code></pre>
+    </section>
+
+    <section>
+      <h2>最终海报</h2>
+      <div class="poster-grid">
+        <figure>
+          <img src="薰儿-txt/薰儿-poster-9x16-4k.png" alt="薰儿成熟期人设海报">
+          <figcaption>
+            成熟期薰儿：古族神品血脉、七彩族纹、金帝焚天炎。文件：
+            <a href="薰儿-txt/薰儿-poster-9x16-4k.png">薰儿-poster-9x16-4k.png</a>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="薰儿-txt/萧薰儿-青涩时期-poster-9x16-4k.png" alt="萧薰儿青涩时期人设海报">
+          <figcaption>
+            青涩时期萧薰儿：萧家测验场、紫裙黑金袖口、淡金斗气初显。文件：
+            <a href="薰儿-txt/萧薰儿-青涩时期-poster-9x16-4k.png">萧薰儿-青涩时期-poster-9x16-4k.png</a>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>分享说明</h2>
+      <div class="card">
+        <p>这个 HTML 使用相对路径引用图片和资料文件。公开分享版保留流程、统计、prompt、人设摘要和生成海报；完整小说、章节拆分和含原文的检索上下文不纳入仓库。</p>
+        <pre><code>codex海报生成样例.html
+薰儿-txt/
+  summary.json
+  top-chapters.txt
+  character-brief.md
+  poster-prompt.txt
+  poster-prompt-young-xiao-xuner.txt
+  薰儿-poster-9x16-4k.png
+  萧薰儿-青涩时期-poster-9x16-4k.png</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <main>
+      <p>生成记录：Codex 协作流程样例。页面保存于项目根目录，图片与资料保存于 <code>薰儿-txt/</code>。</p>
+    </main>
+  </footer>
+</body>
+</html>

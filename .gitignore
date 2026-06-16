@@ -1,0 +1,22 @@
+.DS_Store
+
+# Source novel files and generated full-text derivatives are kept local only.
+*.epub
+斗破苍穹 - 天蚕土豆 - 1676CHS.txt
+sections/
+
+# Large copyrighted-context extraction outputs are kept local only.
+薰儿-txt/all-contexts.txt
+薰儿-txt/contexts.jsonl
+薰儿-txt/index.csv
+薰儿-txt/by-chapter/
+
+# Keep final deliverables, prompts, brief, and metadata tracked.
+!薰儿-txt/
+!薰儿-txt/summary.json
+!薰儿-txt/top-chapters.txt
+!薰儿-txt/character-brief.md
+!薰儿-txt/poster-prompt.txt
+!薰儿-txt/poster-prompt-young-xiao-xuner.txt
+!薰儿-txt/*poster-9x16-4k.png
+薰儿-txt/*poster-source.png
