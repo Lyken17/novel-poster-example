@@ -4,7 +4,11 @@
 
 ## 打开样例
 
-直接打开 [`codex海报生成样例.html`](codex海报生成样例.html)。
+GitHub Pages 地址：
+
+https://lyken17.github.io/novel-poster-example/
+
+本地也可以直接打开 [`codex海报生成样例.html`](codex海报生成样例.html)。
 
 ## 仓库内容
 
